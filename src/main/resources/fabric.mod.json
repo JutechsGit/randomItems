@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "randomitems",
+  "version": "${version}",
+  "name": "Random Items",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "assets/randomitems/icon.png",
+  "environment": "server",
+  "entrypoints": {
+    "main": [
+      "org.example.randomitems.Main"
+    ]
+  },
+  "mixins": [
+    "randomitems.mixins.json",
+    {
+      "config": "randomitems.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
