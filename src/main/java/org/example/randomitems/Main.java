@@ -101,7 +101,7 @@ public class Main implements ModInitializer {
 
                 // Give the player the valid item
                 ItemStack reward = new ItemStack(randomItem);
-                player.getInventory().insertStack(reward);
+                player.dropItem(reward,false);
             }
 
             player.sendMessage(Text.literal("You've redeemed " + runs + " voucher(s)!").formatted(Formatting.GREEN), false);
