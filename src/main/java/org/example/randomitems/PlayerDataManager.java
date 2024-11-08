@@ -66,6 +66,6 @@ public class PlayerDataManager {
 
     public static class PlayerData {
         public int playtimeTicks = 0;
-        public int vouchers = 0;
+        public int vouchers = 50;
     }
 }
