@@ -87,25 +87,22 @@ public class Main implements ModInitializer {
                 // Select a random item from the registry
                 int attempts = 0;
                 RegistryEntry.Reference<Item> randomItem;
-                do {
+                while (attempts < 10) {
                     randomItem = Registries.ITEM.getRandom(source.getWorld().getRandom())
                             .orElseThrow(() -> new IllegalStateException("No items in registry"));
                     attempts++;
-                } while (BLACKLISTED_ITEMS.contains(randomItem) && attempts < 10);
-
-                // If no valid item is found after 10 attempts, inform the player and exit
-                if (attempts == 10) {
-                    player.sendMessage(Text.literal("Could not find a valid item to give you. Please inform me @jutechsv4 on discord.").formatted(Formatting.RED), false);
-                    return 0; // Command failure
+                    if (!BLACKLISTED_ITEMS.contains(randomItem)){
+                        ItemStack reward = new ItemStack(randomItem);
+                        player.dropItem(reward, false);
+                    } else if (attempts ==10) {
+                        player.sendMessage(Text.literal("Could not find a valid item to give you. Please inform me @jutechsv4 on discord.").formatted(Formatting.RED), false);
+                        return 0; // Command failure
+                    }
                 }
 
-                // Give the player the valid item
-                ItemStack reward = new ItemStack(randomItem);
-                player.dropItem(reward,false);
+                player.sendMessage(Text.literal("You've redeemed " + runs + " voucher(s)!").formatted(Formatting.GREEN), false);
+                return 1; // Command success
             }
-
-            player.sendMessage(Text.literal("You've redeemed " + runs + " voucher(s)!").formatted(Formatting.GREEN), false);
-            return 1; // Command success
         } else {
             // Calculate remaining time for next voucher
             int remainingTicks = TICKS_PER_HOUR - data.playtimeTicks;
@@ -116,6 +113,6 @@ public class Main implements ModInitializer {
             player.sendMessage(Text.literal("You don't have any vouchers to redeem!").formatted(Formatting.RED), false);
             player.sendMessage(Text.literal("Next voucher in: " + remainingMinutes + "m " + remainingSeconds + "s").formatted(Formatting.YELLOW), false);
             return 0; // Command failure
-        }
+        } return 0;
     }
 }
