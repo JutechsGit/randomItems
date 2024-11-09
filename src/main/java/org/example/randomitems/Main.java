@@ -14,6 +14,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Formatting;
+import org.apache.logging.log4j.core.pattern.AbstractStyleNameConverter;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -24,7 +25,7 @@ import static net.minecraft.server.command.CommandManager.literal;
 public class Main implements ModInitializer {
 
     private final PlayerDataManager dataManager = new PlayerDataManager();
-    private static final int TICKS_PER_HOUR = 20 * 60 * 15; //15 is the time in minutes here. 60 for an hour etc.
+    private static final int TICKS_PER_HOUR = 20 * 60 * 10; //15 is the time in minutes here. 60 for an hour etc.
 
     @Override
     public void onInitialize() {
@@ -59,19 +60,17 @@ public class Main implements ModInitializer {
     private static final Set<Item> BLACKLISTED_ITEMS = new HashSet<>();
     static {
         // Add blacklisted items to the set
-        BLACKLISTED_ITEMS.add(Items.BEDROCK);
+        BLACKLISTED_ITEMS.add(Items.BARRIER);
         BLACKLISTED_ITEMS.add(Items.COMMAND_BLOCK);
         BLACKLISTED_ITEMS.add(Items.CHAIN_COMMAND_BLOCK);
         BLACKLISTED_ITEMS.add(Items.REPEATING_COMMAND_BLOCK);
-        BLACKLISTED_ITEMS.add(Items.JIGSAW);
         BLACKLISTED_ITEMS.add(Items.STRUCTURE_BLOCK);
         BLACKLISTED_ITEMS.add(Items.STRUCTURE_VOID);
-        BLACKLISTED_ITEMS.add(Items.END_PORTAL_FRAME);
-        BLACKLISTED_ITEMS.add(Items.BARRIER);
-        BLACKLISTED_ITEMS.add(Items.FILLED_MAP);
+        BLACKLISTED_ITEMS.add(Items.JIGSAW);
+        BLACKLISTED_ITEMS.add(Items.DEBUG_STICK);
         BLACKLISTED_ITEMS.add(Items.COMMAND_BLOCK_MINECART);
-        BLACKLISTED_ITEMS.add(Items.LIGHT);
         BLACKLISTED_ITEMS.add(Items.KNOWLEDGE_BOOK);
+        BLACKLISTED_ITEMS.add(Items.WRITTEN_BOOK);
 
         // Add more items as needed
     }
