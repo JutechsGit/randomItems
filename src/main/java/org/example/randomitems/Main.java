@@ -69,6 +69,9 @@ public class Main implements ModInitializer {
         BLACKLISTED_ITEMS.add(Items.END_PORTAL_FRAME);
         BLACKLISTED_ITEMS.add(Items.BARRIER);
         BLACKLISTED_ITEMS.add(Items.FILLED_MAP);
+        BLACKLISTED_ITEMS.add(Items.COMMAND_BLOCK_MINECART);
+        BLACKLISTED_ITEMS.add(Items.LIGHT);
+        BLACKLISTED_ITEMS.add(Items.KNOWLEDGE_BOOK);
 
         // Add more items as needed
     }
@@ -85,24 +88,28 @@ public class Main implements ModInitializer {
                 runs++;
 
                 // Select a random item from the registry
-                int attempts = 0;
-                RegistryEntry.Reference<Item> randomItem;
-                while (attempts < 10) {
-                    randomItem = Registries.ITEM.getRandom(source.getWorld().getRandom())
+                boolean validItemFound = false;
+                for (int attempts = 0; attempts < 10; attempts++) {
+                    RegistryEntry.Reference<Item> randomItem = Registries.ITEM.getRandom(source.getWorld().getRandom())
                             .orElseThrow(() -> new IllegalStateException("No items in registry"));
-                    attempts++;
-                    if (!BLACKLISTED_ITEMS.contains(randomItem)){
-                        ItemStack reward = new ItemStack(randomItem);
+
+                    if (!BLACKLISTED_ITEMS.contains(randomItem.value())) {
+                        ItemStack reward = new ItemStack(randomItem.value());
                         player.dropItem(reward, false);
-                    } else if (attempts ==10) {
-                        player.sendMessage(Text.literal("Could not find a valid item to give you. Please inform me @jutechsv4 on discord.").formatted(Formatting.RED), false);
-                        return 0; // Command failure
+                        validItemFound = true;
+                        break; // Exit the attempts loop once a valid item is found
                     }
                 }
 
-                player.sendMessage(Text.literal("You've redeemed " + runs + " voucher(s)!").formatted(Formatting.GREEN), false);
-                return 1; // Command success
+                if (!validItemFound) {
+                    player.sendMessage(Text.literal("Could not find a valid item to give you. Please inform me @jutechsv4 on Discord.").formatted(Formatting.RED), false);
+                    return 0; // Command failure
+                }
             }
+
+            player.sendMessage(Text.literal("You've redeemed " + runs + " voucher(s)!").formatted(Formatting.GREEN), false);
+            return 1; // Command success
+
         } else {
             // Calculate remaining time for next voucher
             int remainingTicks = TICKS_PER_HOUR - data.playtimeTicks;
@@ -113,6 +120,6 @@ public class Main implements ModInitializer {
             player.sendMessage(Text.literal("You don't have any vouchers to redeem!").formatted(Formatting.RED), false);
             player.sendMessage(Text.literal("Next voucher in: " + remainingMinutes + "m " + remainingSeconds + "s").formatted(Formatting.YELLOW), false);
             return 0; // Command failure
-        } return 0;
+        }
     }
 }
